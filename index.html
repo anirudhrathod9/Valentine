@@ -5,89 +5,182 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Valentine?</title>
   <style>
+    :root{
+      --pink:#ff2e63;
+      --text:#161616;
+      --card: rgba(255,255,255,0.86);
+      --shadow: 0 14px 45px rgba(0,0,0,0.14);
+      --radius: 24px;
+    }
+
+    *{ box-sizing:border-box; }
+
     body{
       margin:0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      background: radial-gradient(circle at top, #ffd1dc, #fff);
-      color:#1f1f1f;
-      display:flex;
+      background:
+        radial-gradient(circle at top, rgba(255,46,99,0.25), transparent 55%),
+        radial-gradient(circle at bottom, rgba(255,204,0,0.12), transparent 55%),
+        linear-gradient(180deg, #fff, #fff6f8);
+      color:var(--text);
       min-height:100vh;
+      display:flex;
       align-items:center;
       justify-content:center;
       padding:24px;
     }
+
     .card{
-      width:min(560px, 100%);
-      background: rgba(255,255,255,0.8);
+      width:min(640px, 100%);
+      background: var(--card);
       border: 1px solid rgba(0,0,0,0.06);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.12);
-      border-radius: 24px;
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
       padding: 28px;
       text-align:center;
       position:relative;
       overflow:hidden;
+      backdrop-filter: blur(8px);
     }
-    h1{ font-size: 34px; margin: 6px 0 10px; }
-    p{ font-size: 16px; line-height:1.5; margin: 0 0 18px; opacity:0.9; }
-    .btns{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-top:14px; }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size: 13px;
+      background: rgba(255,46,99,0.12);
+      color:#b0002a;
+      padding: 7px 12px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+      font-weight:700;
+      letter-spacing:0.2px;
+    }
+
+    h1{
+      font-size: clamp(26px, 3.3vw, 36px);
+      margin: 6px 0 10px;
+      line-height:1.15;
+    }
+
+    p{
+      font-size: 16px;
+      line-height:1.55;
+      margin: 0 0 18px;
+      opacity:0.92;
+    }
+
+    .btns{
+      display:flex;
+      gap:14px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+
     button{
       border:0;
       padding: 14px 18px;
       border-radius: 14px;
       font-size: 16px;
       cursor:pointer;
-      transition: transform .08s ease, box-shadow .2s ease;
-      min-width: 150px;
+      transition: transform .08s ease, box-shadow .2s ease, filter .2s ease;
+      min-width: 160px;
+      font-weight:700;
     }
+
     button:active{ transform: scale(0.98); }
+
     .yes{
-      background:#ff2e63;
+      background: var(--pink);
       color:white;
-      box-shadow: 0 10px 24px rgba(255,46,99,0.25);
+      box-shadow: 0 12px 26px rgba(255,46,99,0.26);
     }
+    .yes:hover{ filter: brightness(1.02); }
+
     .no{
       background:#f3f4f6;
       color:#111;
-      box-shadow: 0 10px 24px rgba(0,0,0,0.06);
+      box-shadow: 0 10px 22px rgba(0,0,0,0.07);
       position:relative;
     }
-    .pill{
-      display:inline-block;
-      font-size: 13px;
-      background: rgba(255,46,99,0.12);
-      color:#b0002a;
-      padding: 6px 10px;
-      border-radius: 999px;
-      margin-bottom: 10px;
-      font-weight:600;
-    }
+
     .result{
       margin-top:16px;
-      padding: 14px 14px;
+      padding: 16px;
       background: rgba(0,0,0,0.04);
-      border-radius: 14px;
+      border-radius: 16px;
       display:none;
+      text-align:left;
     }
+
+    .result h2{
+      margin:0 0 10px;
+      font-size: 22px;
+      text-align:center;
+    }
+
+    .result p{
+      margin:0;
+      text-align:center;
+    }
+
+    .videoWrap{
+      margin: 12px auto 12px;
+      border-radius: 18px;
+      overflow:hidden;
+      box-shadow: 0 12px 34px rgba(0,0,0,0.18);
+      background:#000;
+    }
+
+    video{
+      width:100%;
+      display:block;
+      background:#000;
+    }
+
+    .hint{
+      font-size: 13px;
+      opacity: 0.78;
+      margin-top: 10px;
+    }
+
+    .small{
+      font-size: 13px;
+      opacity: 0.78;
+      margin-top: 12px;
+    }
+
+    /* confetti overlay */
     .confetti{
       position:absolute;
-      inset:-60px;
+      inset:-70px;
       background-image:
         radial-gradient(#ff2e63 2px, transparent 3px),
         radial-gradient(#ffcc00 2px, transparent 3px),
         radial-gradient(#7c3aed 2px, transparent 3px),
         radial-gradient(#22c55e 2px, transparent 3px);
-      background-size: 60px 60px;
-      background-position: 0 0, 10px 20px, 30px 10px, 40px 30px;
+      background-size: 62px 62px;
+      background-position: 0 0, 12px 18px, 26px 8px, 42px 28px;
       opacity:0;
       transform: rotate(8deg);
-      transition: opacity .4s ease;
+      transition: opacity .45s ease;
       pointer-events:none;
     }
     .confetti.on{ opacity:0.22; }
-    .small{
-      font-size: 13px;
-      opacity: 0.75;
-      margin-top: 10px;
+
+    /* subtle footer hearts */
+    .hearts{
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:-18px;
+      height:60px;
+      opacity:0.18;
+      font-size:42px;
+      letter-spacing:10px;
+      pointer-events:none;
+      user-select:none;
     }
   </style>
 </head>
@@ -96,10 +189,12 @@
     <div class="confetti" id="confetti"></div>
 
     <div class="pill">💘 A message from Anirudh</div>
+
     <h1>Aakriti, will you be my Valentine?</h1>
+
     <p>
-     I was overthinking this, but it is simple:
-      I love you and I want this day to be ours, 
+      I was overthinking this… but it’s simple.<br/>
+      I love you, and I want this day to be ours. ❤️
     </p>
 
     <div class="btns">
@@ -108,7 +203,12 @@
     </div>
 
     <div class="result" id="resultBox"></div>
-    <div class="small">Tip: Use your laptop to do this 😉 </div>
+
+    <div class="small">
+      Tip: Use your laptop 😉
+    </div>
+
+    <div class="hearts">♥ ♥ ♥ ♥ ♥</div>
   </div>
 
   <script>
@@ -117,16 +217,39 @@
     const resultBox = document.getElementById("resultBox");
     const confetti = document.getElementById("confetti");
 
+    // IMPORTANT: match filename EXACTLY as on GitHub
+    const VIDEO_FILE = "IMG_4488.mov";
+
     yesBtn.addEventListener("click", () => {
       confetti.classList.add("on");
       resultBox.style.display = "block";
+
       resultBox.innerHTML = `
-        <h2 style="margin:0 0 6px;"> Toh deal pakki hui </h2>
-        <p style="margin:0;">
-          Okay it’s official. You’re my Valentine. <br/>
-          Be ready by 7, Ill pick you up. 
+        <h2>Toh deal pakki hui 💘</h2>
+
+        <div class="videoWrap">
+          <video
+            src="${VIDEO_FILE}"
+            controls
+            autoplay
+            muted
+            playsinline
+            preload="metadata"
+          >
+            Sorry, your browser can’t play this video.
+          </video>
+        </div>
+
+        <p>
+          Okay it’s official. You’re my Valentine 🌹. <br/>
+          Be ready by 7, I’ll pick you up 
         </p>
+
+        <div class="hint"> I miss you </div>
       `;
+
+      // scroll to reveal result nicely on smaller screens
+      resultBox.scrollIntoView({ behavior: "smooth", block: "start" });
     });
 
     // playful "no" button that dodges the cursor/tap
@@ -141,11 +264,13 @@
       moveNoButton();
       resultBox.style.display = "block";
       resultBox.innerHTML = `
-        <p style="margin:0;">
-          That button is decorative 😭<br/>
-          Try the other one.
+        <h2 style="margin:0 0 10px; text-align:center;">Nice try 😭</h2>
+        <p style="margin:0; text-align:center;">
+          That button is decorative.<br/>
+          Try the other one 💖
         </p>
       `;
+      resultBox.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   </script>
 </body>
